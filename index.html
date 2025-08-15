@@ -48,7 +48,7 @@
 <meta property="og:description" content="Promotes healthy skin &amp;amp; nails Improves energy levels Anti-aging Helps immune system Combats bacteria, viruses, &amp;amp; mold Product sourced from India"><meta property="og:image" content="http://houseofayurveda.co/cdn/shop/files/Virefillery_03_upscayl_2x_digital-art-4x.png?v=1754410501">
   <meta property="og:image:secure_url" content="https://houseofayurveda.co/cdn/shop/files/Virefillery_03_upscayl_2x_digital-art-4x.png?v=1754410501">
   <meta property="og:image:width" content="4320">
-  <meta property="og:image:height" content="4320"><meta property="og:price:amount" content="59.00">
+  <meta property="og:image:height" content="4320"><meta property="og:price:amount" content="29.95">
   <meta property="og:price:currency" content="USD"><meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Himalayan Ayurvedic Pure Copper Bottle">
 <meta name="twitter:description" content="Promotes healthy skin &amp;amp; nails Improves energy levels Anti-aging Helps immune system Combats bacteria, viruses, &amp;amp; mold Product sourced from India">
@@ -593,8 +593,8 @@ await import("//houseofayurveda.co/cdn/shopifycloud/shop-js/modules/v2/chunk.com
           ImageURL: "https://houseofayurveda.co/cdn/shop/files/Virefillery_03_upscayl_2x_digital-art-4x_grande.png?v=1754410501",
           URL: "https://houseofayurveda.co/products/copper-bottle",
           Brand: "Tribal Tonic",
-          Price: "$59.00",
-          Value: "59.00",
+          Price: "$29.95",
+          Value: "29.95",
           CompareAtPrice: "$267.00"
         };
         _learnq.push(['track', 'Viewed Product', item]);
@@ -802,8 +802,8 @@ await import("//houseofayurveda.co/cdn/shopifycloud/shop-js/modules/v2/chunk.com
       var token = match? match[1]: undefined;
       if (!hasLoggedConversion(token)) {
         setCookieIfConversion(token);
-        window.ShopifyAnalytics.lib.track("Viewed Product",{"currency":"USD","variantId":50538015293734,"productId":10028925550886,"productGid":"gid:\/\/shopify\/Product\/10028925550886","name":"Himalayan Ayurvedic Pure Copper Bottle - Buy 1","price":"59.00","sku":"COPPER1","brand":"Tribal Tonic","variant":"Buy 1","category":"","nonInteraction":true},undefined,undefined,{"shopifyEmitted":true});
-      window.ShopifyAnalytics.lib.track("monorail:\/\/trekkie_storefront_viewed_product\/1.1",{"currency":"USD","variantId":50538015293734,"productId":10028925550886,"productGid":"gid:\/\/shopify\/Product\/10028925550886","name":"Himalayan Ayurvedic Pure Copper Bottle - Buy 1","price":"59.00","sku":"COPPER1","brand":"Tribal Tonic","variant":"Buy 1","category":"","nonInteraction":true,"referer":"https:\/\/houseofayurveda.co\/products\/copper-bottle"});
+        window.ShopifyAnalytics.lib.track("Viewed Product",{"currency":"USD","variantId":50538015293734,"productId":10028925550886,"productGid":"gid:\/\/shopify\/Product\/10028925550886","name":"Himalayan Ayurvedic Pure Copper Bottle - Buy 1","price":"29.95","sku":"COPPER1","brand":"Tribal Tonic","variant":"Buy 1","category":"","nonInteraction":true},undefined,undefined,{"shopifyEmitted":true});
+      window.ShopifyAnalytics.lib.track("monorail:\/\/trekkie_storefront_viewed_product\/1.1",{"currency":"USD","variantId":50538015293734,"productId":10028925550886,"productGid":"gid:\/\/shopify\/Product\/10028925550886","name":"Himalayan Ayurvedic Pure Copper Bottle - Buy 1","price":"29.95","sku":"COPPER1","brand":"Tribal Tonic","variant":"Buy 1","category":"","nonInteraction":true,"referer":"https:\/\/houseofayurveda.co\/products\/copper-bottle"});
       }
     });
 
@@ -2364,13 +2364,13 @@ Log in</a><ul class="list list-social list-unstyled" role="list"></ul>
   <div class="price__container"><div class="price__regular">
       <span class="visually-hidden visually-hidden--inline">Regular price</span>
       <span class="price-item price-item--regular">
-        $59.00
+        $29.95
       </span>
     </div>
     <div class="price__sale ">
       <span class="visually-hidden visually-hidden--inline compare-price-label">Regular price</span>
       <span class="price-item price-item--sale price-item--last">
-        $59.00
+        $29.95
       </span>
         <span class="visually-hidden visually-hidden--inline regular-price-label">Sale price</span>
         <span class="price__compare-price">
@@ -5787,6 +5787,141 @@ Stay balanced. Stay vibrant. Every sip counts. 🌿</span></p>
 document.addEventListener('DOMContentLoaded', function() {
     replaceDollarInDOM();
 }); 
+
+</script>
+
+<script>
+// Method 1: Direct hiding with multiple selectors
+function hideShopPayButton() {
+    const selectors = [
+        'shop-pay-wallet-button',
+        '[access-token]',
+        '[wallet-params*="shopId"]',
+        '[page-type="product"]'
+    ];
+    
+    selectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => {
+            element.style.display = 'none !important';
+            element.style.visibility = 'hidden !important';
+            element.style.opacity = '0 !important';
+            element.style.height = '0 !important';
+            element.style.width = '0 !important';
+            element.style.overflow = 'hidden !important';
+        });
+    });
+}
+
+// Method 2: Complete removal from DOM
+function removeShopPayButton() {
+    const selectors = [
+        'shop-pay-wallet-button',
+        '[access-token]',
+        '[wallet-params*="shopId"]'
+    ];
+    
+    selectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => {
+            element.remove();
+        });
+    });
+}
+
+// Method 3: MutationObserver for dynamically loaded content
+function setupShopPayButtonBlocker() {
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === 1) { // Element node
+                    // Check if the added node is the shop-pay button
+                    if (node.tagName === 'SHOP-PAY-WALLET-BUTTON' || 
+                        node.querySelector && node.querySelector('shop-pay-wallet-button')) {
+                        hideShopPayButton();
+                        removeShopPayButton();
+                    }
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+}
+
+// Method 4: Aggressive CSS injection
+function injectHidingStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        shop-pay-wallet-button,
+        [access-token],
+        [wallet-params*="shopId"],
+        [page-type="product"][slot="button"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Method 5: Interval-based checking (for persistent elements)
+function continuousHiding() {
+    const interval = setInterval(() => {
+        hideShopPayButton();
+        removeShopPayButton();
+    }, 100); // Check every 100ms
+    
+    // Stop after 30 seconds to avoid performance issues
+    setTimeout(() => clearInterval(interval), 30000);
+}
+
+// Method 6: Complete solution - run all methods
+function completeShopPayBlocker() {
+    // Immediate hiding
+    hideShopPayButton();
+    removeShopPayButton();
+    
+    // Inject CSS
+    injectHidingStyles();
+    
+    // Set up observer for dynamic content
+    setupShopPayButtonBlocker();
+    
+    // Continuous checking for first 10 seconds
+    const interval = setInterval(() => {
+        hideShopPayButton();
+        removeShopPayButton();
+    }, 200);
+    
+    setTimeout(() => clearInterval(interval), 10000);
+}
+
+// Execute when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', completeShopPayBlocker);
+} else {
+    completeShopPayBlocker();
+}
+
+// Also execute immediately
+completeShopPayBlocker();
+
+// Additional fallback - run after window load
+window.addEventListener('load', () => {
+    setTimeout(completeShopPayBlocker, 500);
+    setTimeout(completeShopPayBlocker, 1000);
+    setTimeout(completeShopPayBlocker, 2000);
+    setTimeout(completeShopPayBlocker, 5000);});
 
 </script>
 
