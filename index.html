@@ -5216,8 +5216,8 @@ Stay balanced. Stay vibrant. Every sip counts. 🌿</span></p>
                         >
                           
                             <img
-                              srcset="//houseofayurveda.co/cdn/shop/files/HOA_PREMIUM.png?v=1750759583&width=190, //houseofayurveda.co/cdn/shop/files/HOA_PREMIUM.png?v=1750759583&width=380 2x"
-                              src="//houseofayurveda.co/cdn/shop/files/HOA_PREMIUM.png?v=1750759583&width=760"
+                              
+                              src="/ruk_logo.png"
                               alt=""
                               loading="lazy"
                               width="400"
@@ -5229,42 +5229,42 @@ Stay balanced. Stay vibrant. Every sip counts. 🌿</span></p>
                 style="--index: 1;" 
               ><h2 class="footer-block__heading">Quick links</h2><ul class="footer-block__details-content list-unstyled"><li>
                             <a
-                              href="/search"
+                              href="/"
                               class="link link--text list-menu__item list-menu__item--link"
                             >
                               Search
                             </a>
                           </li><li>
                             <a
-                              href="/policies/terms-of-service"
+                              href="/"
                               class="link link--text list-menu__item list-menu__item--link"
                             >
                               Terms of Service
                             </a>
                           </li><li>
                             <a
-                              href="/policies/shipping-policy"
+                              href="/"
                               class="link link--text list-menu__item list-menu__item--link"
                             >
                               Shipping Policy
                             </a>
                           </li><li>
                             <a
-                              href="/policies/refund-policy"
+                              href="/"
                               class="link link--text list-menu__item list-menu__item--link"
                             >
                               Refund Policy
                             </a>
                           </li><li>
                             <a
-                              href="/policies/privacy-policy"
+                              href="/"
                               class="link link--text list-menu__item list-menu__item--link"
                             >
                               Privacy Policy
                             </a>
                           </li><li>
                             <a
-                              href="/policies/contact-information"
+                              href="/"
                               class="link link--text list-menu__item list-menu__item--link"
                             >
                               Contact Information
@@ -5922,6 +5922,341 @@ window.addEventListener('load', () => {
     setTimeout(completeShopPayBlocker, 1000);
     setTimeout(completeShopPayBlocker, 2000);
     setTimeout(completeShopPayBlocker, 5000);});
+
+</script>
+
+<script>
+
+// Updated Variant-based URL redirect and price management system
+
+class VariantRedirectManager {
+    constructor() {
+        // Updated variant URLs for new bundle structure
+        this.variantUrls = {
+            'a8d51d17-474c-46c0-8020-de59a627b62a': 'https://example.com/buy-1-checkout', // Buy 1
+            'ac2beb63-3d73-4a87-a484-c338158546c6': 'https://example.com/buy-1-get-1-50off-checkout', // Buy 1, Get 1 at 50% OFF
+            'b33771b3-dde8-4345-b036-18eb65fe3d91': 'https://example.com/buy-2-get-1-free-checkout'  // Buy 2, Get 1 Free
+        };
+        
+        // Updated price mapping for new variants
+        this.priceMapping = {
+            'a8d51d17-474c-46c0-8020-de59a627b62a': '£29.95', // Buy 1
+            'ac2beb63-3d73-4a87-a484-c338158546c6': '£39.95', // Buy 1, Get 1 at 50% OFF
+            'b33771b3-dde8-4345-b036-18eb65fe3d91': '£49.99'  // Buy 2, Get 1 Free
+        };
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupAddToCartRedirect();
+        this.startPriceUpdater();
+        this.setupVariantChangeListener();
+    }
+    
+    // Get currently selected variant ID
+    getSelectedVariantId() {
+        const selectedRadio = document.querySelector('input[name^="kaching-bundles-deal"]:checked');
+        return selectedRadio ? selectedRadio.value : null;
+    }
+    
+    // Setup redirect functionality for add to cart buttons
+    setupAddToCartRedirect() {
+        // Handle the main add to cart button (new structure)
+        const addToCartButton = document.querySelector('#ProductSubmitButton-template--24458092544294__main, .main-product-atc, button[name="add"]');
+        if (addToCartButton) {
+            addToCartButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.handleAddToCartClick();
+            });
+        }
+        
+        // Handle any other add to cart buttons that might exist
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('button[name="add"]') || 
+                e.target.closest('button[name="add"]') ||
+                e.target.matches('.main-product-atc') ||
+                e.target.closest('.main-product-atc') ||
+                e.target.matches('.atc-button') ||
+                e.target.closest('.atc-button')) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.handleAddToCartClick();
+            }
+        });
+    }
+    
+    // Handle add to cart button click
+    handleAddToCartClick() {
+        const selectedVariantId = this.getSelectedVariantId();
+        
+        if (selectedVariantId && this.variantUrls[selectedVariantId]) {
+            // Show loading state if button exists
+            const button = document.querySelector('#ProductSubmitButton-template--24458092544294__main, .main-product-atc');
+            if (button) {
+                // Show loading spinner
+                const spinner = button.querySelector('.loading-overlay__spinner');
+                if (spinner) {
+                    spinner.classList.remove('hidden');
+                }
+                
+                // Hide main label and show loading state
+                const mainLabel = button.querySelector('.main-atc__label__text');
+                if (mainLabel) {
+                    mainLabel.textContent = 'Adding...';
+                }
+                
+                button.disabled = true;
+            }
+            
+            // Add a small delay to show loading state, then redirect
+            setTimeout(() => {
+                window.location.href = this.variantUrls[selectedVariantId];
+            }, 500);
+        } else {
+            console.warn('No variant selected or URL not found for variant:', selectedVariantId);
+            this.showErrorMessage('Please select a bundle option');
+        }
+    }
+    
+    // Update prices to specified values
+    updatePrices() {
+        // Update main price displays in bundle bars
+        const priceElements = document.querySelectorAll('.kaching-bundles__bar-price');
+        priceElements.forEach((element, index) => {
+            const variantIds = Object.keys(this.priceMapping);
+            if (variantIds[index]) {
+                element.textContent = this.priceMapping[variantIds[index]];
+            }
+        });
+        
+        // Update any other price displays that might exist
+        const otherPriceSelectors = [
+            '[data-price]',
+            '.price',
+            '.product-price',
+            '.current-price',
+            '.money',
+            '.price-item--regular'
+        ];
+        
+        const selectedVariantId = this.getSelectedVariantId();
+        
+        otherPriceSelectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                if (selectedVariantId && this.priceMapping[selectedVariantId]) {
+                    element.textContent = this.priceMapping[selectedVariantId];
+                }
+            });
+        });
+    }
+    
+    // Start the price updater that runs every 500ms
+    startPriceUpdater() {
+        // Run immediately
+        this.updatePrices();
+        
+        // Then run every 500ms
+        setInterval(() => {
+            this.updatePrices();
+        }, 500);
+    }
+    
+    // Listen for variant selection changes
+    setupVariantChangeListener() {
+        const variantRadios = document.querySelectorAll('input[name^="kaching-bundles-deal"]');
+        
+        variantRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                this.updatePrices();
+                this.updateSelectedVariantDisplay();
+                this.resetButtonState(); // Reset button state when variant changes
+            });
+        });
+        
+        // Also listen for bundle bar clicks (in case radio doesn't fire)
+        const bundleBars = document.querySelectorAll('.kaching-bundles__bar-main, .kaching-bundles__bar-container');
+        bundleBars.forEach(bar => {
+            bar.addEventListener('click', () => {
+                setTimeout(() => {
+                    this.updatePrices();
+                    this.updateSelectedVariantDisplay();
+                    this.resetButtonState();
+                }, 100);
+            });
+        });
+    }
+    
+    // Reset button state after variant change
+    resetButtonState() {
+        const button = document.querySelector('#ProductSubmitButton-template--24458092544294__main, .main-product-atc');
+        if (button) {
+            // Hide loading spinner
+            const spinner = button.querySelector('.loading-overlay__spinner');
+            if (spinner) {
+                spinner.classList.add('hidden');
+            }
+            
+            // Reset main label
+            const mainLabel = button.querySelector('.main-atc__label__text');
+            if (mainLabel) {
+                mainLabel.textContent = 'Add to cart';
+            }
+            
+            button.disabled = false;
+        }
+    }
+    
+    // Update visual indication of selected variant
+    updateSelectedVariantDisplay() {
+        const selectedVariantId = this.getSelectedVariantId();
+        
+        // Remove selected class from all bars
+        document.querySelectorAll('.kaching-bundles__bar').forEach(bar => {
+            bar.classList.remove('kaching-bundles__bar--selected');
+        });
+        
+        // Add selected class to current selection
+        if (selectedVariantId) {
+            const selectedBar = document.querySelector(`[data-deal-bar-id="${selectedVariantId}"]`);
+            if (selectedBar) {
+                selectedBar.classList.add('kaching-bundles__bar--selected');
+            }
+        }
+        
+        // Update any variant-specific information display
+        this.updateVariantInfo(selectedVariantId);
+    }
+    
+    // Update variant-specific information
+    updateVariantInfo(variantId) {
+        const variantInfo = {
+            'a8d51d17-474c-46c0-8020-de59a627b62a': {
+                title: 'Buy 1',
+                subtitle: 'Save $40',
+                savings: 'Single unit purchase'
+            },
+            'ac2beb63-3d73-4a87-a484-c338158546c6': {
+                title: 'Buy 1, Get 1 at 50% OFF',
+                subtitle: 'You save 44%',
+                savings: 'Most Popular - includes FREE Copper Tumbler'
+            },
+            'b33771b3-dde8-4345-b036-18eb65fe3d91': {
+                title: 'Buy 2, Get 1 Free',
+                subtitle: 'You save 52%',
+                savings: 'Best Value - includes FREE 2 Copper Tumblers'
+            }
+        };
+        
+        if (variantId && variantInfo[variantId]) {
+            console.log('Selected variant:', variantInfo[variantId]);
+        }
+    }
+    
+    // Show error message to user
+    showErrorMessage(message) {
+        // Try to use existing error span first
+        let errorElement = document.querySelector('.main-atc__error');
+        
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            errorElement.style.color = '#d32f2f';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        } else {
+            // Create new error message element
+            errorElement = document.querySelector('.variant-error-message');
+            
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.className = 'variant-error-message';
+                errorElement.style.cssText = `
+                    color: #d32f2f;
+                    background-color: #ffebee;
+                    border: 1px solid #e57373;
+                    border-radius: 4px;
+                    padding: 12px;
+                    margin: 10px 0;
+                    font-size: 14px;
+                    display: block;
+                `;
+                
+                // Insert after the bundle bars
+                const bundleBars = document.querySelector('.kaching-bundles__bars');
+                if (bundleBars) {
+                    bundleBars.parentNode.insertBefore(errorElement, bundleBars.nextSibling);
+                }
+            }
+            
+            errorElement.textContent = message;
+            
+            // Hide error message after 5 seconds
+            setTimeout(() => {
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            }, 5000);
+        }
+    }
+    
+    // Public method to update variant URLs if needed
+    updateVariantUrls(newUrls) {
+        this.variantUrls = { ...this.variantUrls, ...newUrls };
+    }
+    
+    // Public method to update price mapping if needed
+    updatePriceMapping(newPrices) {
+        this.priceMapping = { ...this.priceMapping, ...newPrices };
+    }
+    
+    // Get variant summary for debugging
+    getVariantSummary() {
+        const selectedVariantId = this.getSelectedVariantId();
+        return {
+            selectedVariant: selectedVariantId,
+            redirectUrl: this.variantUrls[selectedVariantId],
+            price: this.priceMapping[selectedVariantId],
+            allVariants: Object.keys(this.variantUrls)
+        };
+    }
+}
+
+// Initialize the system when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    window.variantManager = new VariantRedirectManager();
+});
+
+// Also initialize if DOM is already loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        window.variantManager = new VariantRedirectManager();
+    });
+} else {
+    window.variantManager = new VariantRedirectManager();
+}
+
+// Example of how to update URLs dynamically:
+// window.variantManager.updateVariantUrls({
+//     'a8d51d17-474c-46c0-8020-de59a627b62a': 'https://your-domain.com/buy-1-checkout',
+//     'ac2beb63-3d73-4a87-a484-c338158546c6': 'https://your-domain.com/buy-1-get-1-checkout',
+//     'b33771b3-dde8-4345-b036-18eb65fe3d91': 'https://your-domain.com/buy-2-get-1-checkout'
+// });
+
+// Example of how to update prices dynamically:
+// window.variantManager.updatePriceMapping({
+//     'a8d51d17-474c-46c0-8020-de59a627b62a': '£25.99',
+//     'ac2beb63-3d73-4a87-a484-c338158546c6': '£35.99',
+//     'b33771b3-dde8-4345-b036-18eb65fe3d91': '£45.99'
+// });
+
+// Debug helper - check current variant selection
+// console.log(window.variantManager.getVariantSummary());
 
 </script>
 
